@@ -301,6 +301,15 @@ class JiraMCPCompleteIntegration:
         try:
             print(f"🔍 Searching Jira issues with JQL: {jql}")
             
+            # Ensure we have a valid token
+            if self.token_manager:
+                valid_token = await self.token_manager.ensure_valid_token()
+                if valid_token:
+                    self.access_token = valid_token
+                else:
+                    print("❌ No valid token available")
+                    return []
+            
             headers = {
                 "Authorization": f"Bearer {self.access_token}",
                 "Accept": "application/json",
@@ -317,6 +326,16 @@ class JiraMCPCompleteIntegration:
             
             async with httpx.AsyncClient() as client:
                 response = await client.post(url, headers=headers, json=data)
+                
+                # If we get a 401, try to refresh the token and retry
+                if response.status_code == 401 and self.token_manager:
+                    print("🔄 Token expired, attempting refresh...")
+                    valid_token = await self.token_manager.ensure_valid_token()
+                    if valid_token:
+                        self.access_token = valid_token
+                        headers["Authorization"] = f"Bearer {self.access_token}"
+                        response = await client.post(url, headers=headers, json=data)
+                
                 response.raise_for_status()
                 
                 result = response.json()
@@ -337,6 +356,15 @@ class JiraMCPCompleteIntegration:
         try:
             print(f"📋 Getting Jira issue: {issue_key}")
             
+            # Ensure we have a valid token
+            if self.token_manager:
+                valid_token = await self.token_manager.ensure_valid_token()
+                if valid_token:
+                    self.access_token = valid_token
+                else:
+                    print("❌ No valid token available")
+                    return None
+            
             headers = {
                 "Authorization": f"Bearer {self.access_token}",
                 "Accept": "application/json"
@@ -346,6 +374,16 @@ class JiraMCPCompleteIntegration:
             
             async with httpx.AsyncClient() as client:
                 response = await client.get(url, headers=headers)
+                
+                # If we get a 401, try to refresh the token and retry
+                if response.status_code == 401 and self.token_manager:
+                    print("🔄 Token expired, attempting refresh...")
+                    valid_token = await self.token_manager.ensure_valid_token()
+                    if valid_token:
+                        self.access_token = valid_token
+                        headers["Authorization"] = f"Bearer {self.access_token}"
+                        response = await client.get(url, headers=headers)
+                
                 response.raise_for_status()
                 
                 issue = response.json()
