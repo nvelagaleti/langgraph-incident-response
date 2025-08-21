@@ -1353,8 +1353,8 @@ def create_graph() -> StateGraph:
     workflow = StateGraph(IncidentInput)
     
     # Add nodes for each step
-    workflow.add_node("step1_parse_ticket", step1_parse_ir_ticket)
     workflow.add_node("setup_mcp", setup_mcp_integrations)
+    workflow.add_node("step1_parse_ticket", step1_parse_ir_ticket)
     workflow.add_node("step2_identify_repo", step2_identify_first_repo)
     workflow.add_node("step3_discover_path", step3_discover_repo_path)
     workflow.add_node("step4_parallel_analysis", step4_parallel_analysis)
@@ -1366,9 +1366,9 @@ def create_graph() -> StateGraph:
     workflow.add_node("step9_update_ticket", step9_update_ir_ticket)
     
     # Define the linear workflow
-    workflow.add_edge(START, "step1_parse_ticket")
-    workflow.add_edge("step1_parse_ticket", "setup_mcp")
-    workflow.add_edge("setup_mcp", "step2_identify_repo")
+    workflow.add_edge(START, "setup_mcp")
+    workflow.add_edge("setup_mcp", "step1_parse_ticket")
+    workflow.add_edge("step1_parse_ticket", "step2_identify_repo")
     workflow.add_edge("step2_identify_repo", "step3_discover_path")
     workflow.add_edge("step3_discover_path", "step4_parallel_analysis")
     workflow.add_edge("step4_parallel_analysis", "step5_analyze_logs")

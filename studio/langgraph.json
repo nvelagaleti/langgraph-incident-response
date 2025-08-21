@@ -1,0 +1,16 @@
+{
+    "dockerfile_lines": [],
+    "graphs": {
+      "incident_response_simple": "./incident_response_simple.py:graph",
+      "incident_response_basic": "./incident_response_basic.py:graph",
+      "incident_response_enhanced": "./incident_response_enhanced.py:graph",
+      "incident_response_with_mcp": "./incident_response_with_mcp.py:graph",
+      "coordinator_agent": "./coordinator_agent.py:graph",
+      "investigator_agent": "./investigator_agent.py:graph"
+    },
+    "env": "./.env",
+    "python_version": "3.11",
+    "dependencies": [
+      "."
+    ]
+  }
