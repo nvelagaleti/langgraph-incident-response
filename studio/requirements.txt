@@ -1,0 +1,10 @@
+langgraph
+langchain-core
+langchain-community
+# Circuit LLM dependencies (replaces OpenAI)
+langchain-mcp
+langchain-mcp-adapters
+httpx
+python-dotenv
+pydantic
+typing-extensions

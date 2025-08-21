@@ -1,0 +1,112 @@
+[
+  {
+    "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+    "self": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/project/10001",
+    "id": "10001",
+    "key": "LEARNJIRA",
+    "name": "(Learn) Jira Premium benefits in 5 min \ud83d\udc4b",
+    "avatarUrls": {
+      "48x48": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10425",
+      "24x24": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10425?size=small",
+      "16x16": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10425?size=xsmall",
+      "32x32": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10425?size=medium"
+    },
+    "projectTypeKey": "software",
+    "simplified": true,
+    "style": "next-gen",
+    "isPrivate": false,
+    "properties": {},
+    "entityId": "aad76b19-5efb-46a7-a655-23d8250a0318",
+    "uuid": "aad76b19-5efb-46a7-a655-23d8250a0318",
+    "cloud_id": "2d465897-ea50-4081-b4fd-2b7e56d1129c",
+    "cloud_name": "mailtosimha"
+  },
+  {
+    "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+    "self": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/project/10035",
+    "id": "10035",
+    "key": "IR",
+    "name": "IR",
+    "avatarUrls": {
+      "48x48": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10410",
+      "24x24": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10410?size=small",
+      "16x16": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10410?size=xsmall",
+      "32x32": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10410?size=medium"
+    },
+    "projectTypeKey": "software",
+    "simplified": true,
+    "style": "next-gen",
+    "isPrivate": false,
+    "properties": {},
+    "entityId": "fc833626-7fc4-4e7b-9474-47890848aec9",
+    "uuid": "fc833626-7fc4-4e7b-9474-47890848aec9",
+    "cloud_id": "2d465897-ea50-4081-b4fd-2b7e56d1129c",
+    "cloud_name": "mailtosimha"
+  },
+  {
+    "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+    "self": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/project/10000",
+    "id": "10000",
+    "key": "MYAPPBE",
+    "name": "MYAPPBE",
+    "avatarUrls": {
+      "48x48": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10407",
+      "24x24": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10407?size=small",
+      "16x16": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10407?size=xsmall",
+      "32x32": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10407?size=medium"
+    },
+    "projectTypeKey": "software",
+    "simplified": true,
+    "style": "next-gen",
+    "isPrivate": false,
+    "properties": {},
+    "entityId": "34a8a960-d860-421b-912b-90bc9dcfa800",
+    "uuid": "34a8a960-d860-421b-912b-90bc9dcfa800",
+    "cloud_id": "2d465897-ea50-4081-b4fd-2b7e56d1129c",
+    "cloud_name": "mailtosimha"
+  },
+  {
+    "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+    "self": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/project/10034",
+    "id": "10034",
+    "key": "MYAPPGQL",
+    "name": "MYAPPGQL",
+    "avatarUrls": {
+      "48x48": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10416",
+      "24x24": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10416?size=small",
+      "16x16": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10416?size=xsmall",
+      "32x32": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10416?size=medium"
+    },
+    "projectTypeKey": "software",
+    "simplified": true,
+    "style": "next-gen",
+    "isPrivate": false,
+    "properties": {},
+    "entityId": "4fe32938-7978-47f3-b600-ea2828a624e5",
+    "uuid": "4fe32938-7978-47f3-b600-ea2828a624e5",
+    "cloud_id": "2d465897-ea50-4081-b4fd-2b7e56d1129c",
+    "cloud_name": "mailtosimha"
+  },
+  {
+    "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+    "self": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/project/10033",
+    "id": "10033",
+    "key": "MYAPPWEB",
+    "name": "MYAPPWEB",
+    "avatarUrls": {
+      "48x48": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10422",
+      "24x24": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10422?size=small",
+      "16x16": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10422?size=xsmall",
+      "32x32": "https://api.atlassian.com/ex/jira/2d465897-ea50-4081-b4fd-2b7e56d1129c/rest/api/3/universal_avatar/view/type/project/avatar/10422?size=medium"
+    },
+    "projectTypeKey": "software",
+    "simplified": true,
+    "style": "next-gen",
+    "isPrivate": false,
+    "properties": {},
+    "entityId": "ed322d68-09ef-4311-bcd2-61d984673c7f",
+    "uuid": "ed322d68-09ef-4311-bcd2-61d984673c7f",
+    "cloud_id": "2d465897-ea50-4081-b4fd-2b7e56d1129c",
+    "cloud_name": "mailtosimha"
+  }
+]
