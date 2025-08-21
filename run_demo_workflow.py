@@ -18,7 +18,7 @@ def demo_enhanced_workflow():
     
     # Test IR ticket data
     test_ir_ticket = {
-        "incident_id": "IR-2024-001",
+        "incident_id": "IR-1",
         "title": "Products page not loading - UI error",
         "description": "Users cannot access the Products page. UI shows error message 'Could not connect to GraphQL service'. API calls are failing with timeout errors. Backend service configuration was recently changed.",
         "severity": "HIGH",

@@ -28,7 +28,7 @@ async def test_mcp_production_integration():
         
         # Test initial state
         initial_state = MCPIncidentState(
-            incident_id="IR-2024-001",
+            incident_id="IR-1",
             title="",
             description="",
             severity="",

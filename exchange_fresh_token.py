@@ -15,7 +15,7 @@ def exchange_authorization_code():
     """Exchange authorization code for access token."""
     
     # The fresh authorization code you provided
-    auth_code = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1MGY0OWI2YS04MzA1LTQxZTMtOWJkZC1lMWU1Y2U4YjU4ZmUiLCJzdWIiOiI3MDEyMTpjZmQxOWQyNy1iNGM1LTQwNTMtYjFkMS02NWRkMTgyYWMyNzgiLCJuYmYiOjE3NTU3NDU5ODMsImlzcyI6ImF1dGguYXRsYXNzaWFuLmNvbSIsImlhdCI6MTc1NTc0NTk4MywiZXhwIjoxNzU1NzQ2MjgzLCJhdWQiOiJJUnBUa1NZUnFZMnNQYzJGeGhIT0pHcGliNGtsS3BYUCIsImNsaWVudF9hdXRoX3R5cGUiOiJQT1NUIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3ZlcmlmaWVkIjp0cnVlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vdWp0IjoiNTBmNDliNmEtODMwNS00MWUzLTliZGQtZTFlNWNlOGI1OGZlIiwic2NvcGUiOlsibWFuYWdlOmppcmEtY29uZmlndXJhdGlvbiIsIm1hbmFnZTpqaXJhLWRhdGEtcHJvdmlkZXIiLCJtYW5hZ2U6amlyYS1wcm9qZWN0IiwibWFuYWdlOmppcmEtd2ViaG9vayIsInJlYWQ6amlyYS11c2VyIiwicmVhZDpqaXJhLXdvcmsiLCJ3cml0ZTpqaXJhLXdvcmsiXSwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2F0bF90b2tlbl90eXBlIjoiQVVUSF9DT0RFIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2hhc1JlZGlyZWN0VXJpIjp0cnVlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vc2Vzc2lvbl9pZCI6IjVkODNhY2Q3LTc3MTAtNDkxZS05ZDA1LTk5NDk0ODMxZDg1MiIsImh0dHBzOi8vaWQuYXRsYXNzaWFuLmNvbS9wcm9jZXNzUmVnaW9uIjoidXMtd2VzdC0yIn0.vvwT0qJZrvde85Ri87TsRA4GiFloexM12jULLCWp3xQ"
+    auth_code = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4YjljYmM2MS0yZDk1LTRiNjctYmUwMy02ZDNiOTg1ZTg1OWQiLCJzdWIiOiI3MDEyMTpjZmQxOWQyNy1iNGM1LTQwNTMtYjFkMS02NWRkMTgyYWMyNzgiLCJuYmYiOjE3NTU3NjkyOTgsImlzcyI6ImF1dGguYXRsYXNzaWFuLmNvbSIsImlhdCI6MTc1NTc2OTI5OCwiZXhwIjoxNzU1NzY5NTk4LCJhdWQiOiJJUnBUa1NZUnFZMnNQYzJGeGhIT0pHcGliNGtsS3BYUCIsImNsaWVudF9hdXRoX3R5cGUiOiJQT1NUIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3ZlcmlmaWVkIjp0cnVlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vdWp0IjoiOGI5Y2JjNjEtMmQ5NS00YjY3LWJlMDMtNmQzYjk4NWU4NTlkIiwic2NvcGUiOlsibWFuYWdlOmppcmEtY29uZmlndXJhdGlvbiIsIm1hbmFnZTpqaXJhLWRhdGEtcHJvdmlkZXIiLCJtYW5hZ2U6amlyYS1wcm9qZWN0IiwibWFuYWdlOmppcmEtd2ViaG9vayIsInJlYWQ6amlyYS11c2VyIiwicmVhZDpqaXJhLXdvcmsiLCJ3cml0ZTpqaXJhLXdvcmsiXSwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2F0bF90b2tlbl90eXBlIjoiQVVUSF9DT0RFIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2hhc1JlZGlyZWN0VXJpIjp0cnVlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vc2Vzc2lvbl9pZCI6IjVkODNhY2Q3LTc3MTAtNDkxZS05ZDA1LTk5NDk0ODMxZDg1MiIsImh0dHBzOi8vaWQuYXRsYXNzaWFuLmNvbS9wcm9jZXNzUmVnaW9uIjoidXMtd2VzdC0yIn0.A95yX3kNwxWIchCyMsEpVUR8qL5dp6VUWg1qKHlCLrI"
     
     # Get credentials from environment
     client_id = os.getenv("JIRA_OAUTH_CLIENT_ID")
@@ -73,7 +73,7 @@ def exchange_authorization_code():
 def update_env_file(tokens):
     """Update the .env file with new tokens."""
     try:
-        # Read current .env file
+        # Update main .env file
         env_path = ".env"
         with open(env_path, 'r') as f:
             lines = f.readlines()
@@ -100,7 +100,39 @@ def update_env_file(tokens):
         with open(env_path, 'w') as f:
             f.writelines(lines)
         
-        print("✅ .env file updated with new tokens!")
+        print("✅ Main .env file updated with new tokens!")
+        
+        # Update studio/.env file
+        studio_env_path = "studio/.env"
+        if os.path.exists(studio_env_path):
+            with open(studio_env_path, 'r') as f:
+                studio_lines = f.readlines()
+            
+            # Update or add token lines
+            studio_token_updated = False
+            studio_refresh_token_updated = False
+            
+            for i, line in enumerate(studio_lines):
+                if line.startswith("JIRA_OAUTH_ACCESS_TOKEN="):
+                    studio_lines[i] = f"JIRA_OAUTH_ACCESS_TOKEN={tokens.get('access_token', '')}\n"
+                    studio_token_updated = True
+                elif line.startswith("JIRA_OAUTH_REFRESH_TOKEN="):
+                    studio_lines[i] = f"JIRA_OAUTH_REFRESH_TOKEN={tokens.get('refresh_token', '')}\n"
+                    studio_refresh_token_updated = True
+            
+            # Add new lines if they don't exist
+            if not studio_token_updated:
+                studio_lines.append(f"JIRA_OAUTH_ACCESS_TOKEN={tokens.get('access_token', '')}\n")
+            if not studio_refresh_token_updated and tokens.get('refresh_token'):
+                studio_lines.append(f"JIRA_OAUTH_REFRESH_TOKEN={tokens.get('refresh_token', '')}\n")
+            
+            # Write back to studio/.env file
+            with open(studio_env_path, 'w') as f:
+                f.writelines(studio_lines)
+            
+            print("✅ Studio .env file updated with new tokens!")
+        else:
+            print("⚠️  Studio .env file not found, skipping update")
         
     except Exception as e:
         print(f"❌ Error updating .env file: {e}")

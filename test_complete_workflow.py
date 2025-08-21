@@ -26,7 +26,7 @@ async def test_complete_workflow():
         
         # Create initial state with just incident_id
         initial_state = MCPIncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='',
             description='',
             severity='',

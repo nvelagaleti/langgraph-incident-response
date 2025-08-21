@@ -21,10 +21,10 @@ async def test_step1_parse_ir_ticket():
         
         # Create initial state with only incident_id
         initial_state = IncidentState(
-            incident_id='IR-2024-001'
+            incident_id='IR-1'
         )
         
-        print("📋 Input: incident_id = 'IR-2024-001'")
+        print("📋 Input: incident_id = 'IR-1'")
         print("🔄 Executing step1_parse_ir_ticket...")
         
         result = await step1_parse_ir_ticket(initial_state)
@@ -54,7 +54,7 @@ async def test_setup_mcp_integrations():
         
         # Create state with incident details
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='Test Incident',
             description='Test description',
             severity='high',
@@ -90,7 +90,7 @@ async def test_step2_identify_repo():
         
         # Create state with incident details and MCP setup
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',
@@ -128,7 +128,7 @@ async def test_step3_discover_path():
         
         # Create state with repo identified
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',
@@ -168,7 +168,7 @@ async def test_step4_parallel_analysis():
         
         # Create state with repo path discovered
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',
@@ -204,7 +204,7 @@ async def test_step5_analyze_logs():
         
         # Create state with parallel analysis results
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',
@@ -244,7 +244,7 @@ async def test_step6_analyze_commits():
         
         # Create state with log analysis
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',
@@ -281,7 +281,7 @@ async def test_step7_summarize_rca():
         
         # Create state with both analyses
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',
@@ -323,7 +323,7 @@ async def test_step8_summarize_actions():
         
         # Create state with RCA
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',
@@ -360,7 +360,7 @@ async def test_create_jira_tickets():
         
         # Create state with action items
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',
@@ -404,7 +404,7 @@ async def test_step9_update_ticket():
         
         # Create state with all previous steps
         initial_state = IncidentState(
-            incident_id='IR-2024-001',
+            incident_id='IR-1',
             title='UI Performance Degradation',
             description='Users reporting slow page loads and timeouts on the products page',
             severity='high',

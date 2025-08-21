@@ -102,32 +102,66 @@ async def search_repositories_with_mcp(github_mcp_client, search_keywords):
             # Try searching with each keyword
             for keyword in search_keywords[:3]:  # Use top 3 keywords
                 try:
-                    # Use the working pattern: search with user:nvelagaleti
+                    # Use more specific search query to narrow down results
                     query = f"user:nvelagaleti {keyword}"
                     print(f"🔍 Searching with query: {query}")
                     
                     result = await search_tool.ainvoke({"query": query})
                     
+                    # Log the raw result for debugging
+                    print(f"🔍 Raw result for keyword '{keyword}': {result}")
+                    print(f"🔍 Result type: {type(result)}")
+                    
+                    # Handle different result types
+                    if isinstance(result, str):
+                        print(f"🔍 String result received, trying to parse as JSON...")
+                        try:
+                            import json
+                            parsed_result = json.loads(result)
+                            print(f"🔍 Parsed JSON result: {parsed_result}")
+                            result = parsed_result
+                        except json.JSONDecodeError as e:
+                            print(f"⚠️  Failed to parse string as JSON: {e}")
+                            print(f"🔍 String content: {result[:200]}...")
+                            result = None
+                    
                     if result and isinstance(result, dict) and 'items' in result:
                         repos = result['items']
                         print(f"✅ Found {len(repos)} repositories for keyword '{keyword}'")
                         
+                        # Process repositories found
+                        user_repos_found = 0
                         for repo in repos:
                             if isinstance(repo, dict):
                                 repo_full_name = repo.get('full_name', '')
-                                repo_name = repo.get('name', '')
-                                repo_description = repo.get('description', '')
                                 
-                                if repo_full_name and repo_full_name not in [r.get('full_name') for r in found_repos]:
-                                    found_repos.append({
-                                        'full_name': repo_full_name,
-                                        'name': repo_name,
-                                        'description': repo_description,
-                                        'language': repo.get('language', 'Unknown'),
-                                        'private': repo.get('private', False)
-                                    })
+                                # Only include repositories that belong to the current user (nvelagaleti)
+                                if repo_full_name and repo_full_name.startswith('nvelagaleti/'):
+                                    if repo_full_name not in [r.get('full_name') for r in found_repos]:
+                                        found_repos.append({
+                                            'full_name': repo_full_name,
+                                            'name': repo.get('name', ''),
+                                            'description': repo.get('description', ''),
+                                            'language': repo.get('language', 'Unknown'),
+                                            'private': repo.get('private', False)
+                                        })
+                                        user_repos_found += 1
+                        
+                        if user_repos_found > 0:
+                            print(f"✅ Found {user_repos_found} user repositories for keyword '{keyword}'")
+                        else:
+                            print(f"⚠️  No user repositories found for keyword '{keyword}'")
                     else:
                         print(f"⚠️  No results for keyword '{keyword}'")
+                        if result:
+                            print(f"🔍 Result type: {type(result)}")
+                            if isinstance(result, dict):
+                                print(f"🔍 Result keys: {list(result.keys())}")
+                                print(f"🔍 Result content: {result}")
+                            else:
+                                print(f"🔍 Result content: {result}")
+                        else:
+                            print(f"🔍 Result is None or empty")
                         
                 except Exception as e:
                     print(f"⚠️  Search failed for keyword '{keyword}': {e}")
@@ -135,7 +169,7 @@ async def search_repositories_with_mcp(github_mcp_client, search_keywords):
             if found_repos:
                 # Return just the full names for compatibility
                 repo_names = [repo['full_name'] for repo in found_repos]
-                print(f"✅ MCP search found {len(repo_names)} repositories: {repo_names}")
+                print(f"✅ MCP search found {len(repo_names)} user repositories: {repo_names}")
                 return repo_names
             else:
                 print("⚠️  No repositories found via MCP search")
@@ -277,37 +311,61 @@ if GITHUB_MCP_AVAILABLE:
 
 async def step1_parse_ir_ticket(state: IncidentInput) -> IncidentState:
     """Step 1: Fetch incident details from Jira MCP and analyze with GitHub MCP."""
-    print("📋 Step 1: Fetching Incident Details from Jira MCP...")
+    print("=" * 80)
+    print("🚀 STEP1_Parse_IR_Ticket: Starting execution")
+    print("=" * 80)
+    print(f"📥 Input state keys: {list(state.keys()) if hasattr(state, 'keys') else 'No keys'}")
+    print(f"📥 Input state type: {type(state)}")
     
     incident_id = state.get('incident_id', '')
+    print(f"🔍 Incident ID from state: '{incident_id}' (type: {type(incident_id)})")
+    
     if not incident_id:
+        print("❌ ERROR: incident_id is empty or missing")
+        print(f"🔍 State content: {state}")
         raise ValueError("incident_id is required")
+    
+    print(f"✅ Incident ID validated: '{incident_id}'")
     
     try:
         # Initialize Jira MCP client to fetch real incident details
-        print("🔍 Fetching incident details from Jira...")
+        print("🔧 STEP1: Initializing Jira MCP client...")
         
         # Create a fresh Jira MCP client instance for this step
+        print("🔧 STEP1: Creating JiraMCPCompleteIntegration instance...")
         jira_client = JiraMCPCompleteIntegration()
+        print("✅ STEP1: JiraMCPCompleteIntegration instance created")
         
         # Initialize the client asynchronously
+        print("🔧 STEP1: Initializing Jira client asynchronously...")
         await jira_client.initialize()
+        print("✅ STEP1: Jira client initialized successfully")
         
         # Use Jira MCP to search for the incident by ID - exact match only
         jql_query = f'issuekey = "{incident_id}"'
+        print(f"🔍 STEP1: JQL Query: '{jql_query}'")
         
         try:
-            print(f"🔍 Searching for incident with JQL: {jql_query}")
+            print(f"🔍 STEP1: Searching for incident with JQL: {jql_query}")
+            print(f"🔍 STEP1: Calling jira_client.search_issues...")
             jira_issues = await jira_client.search_issues(
                 jql=jql_query,
                 max_results=1
             )
+            print(f"✅ STEP1: search_issues completed, result type: {type(jira_issues)}")
+            print(f"✅ STEP1: search_issues result length: {len(jira_issues) if jira_issues else 0}")
         except Exception as e:
-            print(f"❌ Error searching issues: {e}")
+            print(f"❌ STEP1: Error searching issues: {e}")
+            print(f"❌ STEP1: Error type: {type(e)}")
+            import traceback
+            print(f"❌ STEP1: Full traceback:")
+            traceback.print_exc()
             jira_issues = None
         
         if not jira_issues or len(jira_issues) == 0:
-            print(f"⚠️  Incident {incident_id} not found in Jira, using fallback data")
+            print(f"⚠️  STEP1: Incident {incident_id} not found in Jira, using fallback data")
+            print(f"⚠️  STEP1: jira_issues value: {jira_issues}")
+            print(f"⚠️  STEP1: jira_issues type: {type(jira_issues)}")
             incident_details = {
                 'title': f'Incident {incident_id}',
                 'description': 'Incident details not found in Jira system',
@@ -317,12 +375,15 @@ async def step1_parse_ir_ticket(state: IncidentInput) -> IncidentState:
                 'affected_components': ['frontend', 'api'],
                 'user_impact': 'Users unable to access application'
             }
+            print(f"⚠️  STEP1: Using fallback incident details: {incident_details}")
         else:
             # Extract real incident details from Jira
+            print(f"✅ STEP1: Found {len(jira_issues)} issues, processing first issue")
             jira_issue = jira_issues[0]
-            print(f"🔍 Debug: Jira issue structure: {list(jira_issue.keys())}")
+            print(f"🔍 STEP1: Jira issue structure: {list(jira_issue.keys())}")
+            print(f"🔍 STEP1: Jira issue key: {jira_issue.get('key', 'N/A')}")
             fields = jira_issue.get('fields', {})
-            print(f"🔍 Debug: Fields available: {list(fields.keys())}")
+            print(f"🔍 STEP1: Fields available: {list(fields.keys())}")
             
             # Handle description which might be in Atlassian Document Format
             description = fields.get('description', '')
@@ -365,11 +426,15 @@ async def step1_parse_ir_ticket(state: IncidentInput) -> IncidentState:
                 'labels': fields.get('labels', []),
                 'priority': priority_name
             }
+            print(f"✅ STEP1: Extracted incident details successfully")
+            print(f"✅ STEP1: Title: {incident_details['title']}")
+            print(f"✅ STEP1: Severity: {incident_details['severity']}")
+            print(f"✅ STEP1: Assignee: {incident_details['assignee']}")
         
-        print(f"✅ Fetched incident details: {incident_details['title']}")
+        print(f"✅ STEP1: Fetched incident details: {incident_details['title']}")
         
         # Now use Circuit LLM to analyze the incident and provide investigation guidance
-        print("🔍 Analyzing incident with Circuit LLM for investigation guidance...")
+        print("🔍 STEP1: Analyzing incident with Circuit LLM for investigation guidance...")
         
         incident_analysis_prompt = ChatPromptTemplate.from_messages([
             ("system", """
@@ -471,16 +536,28 @@ async def step1_parse_ir_ticket(state: IncidentInput) -> IncidentState:
             }]
         })
         
-        print(f"✅ Incident fetched from Jira MCP: {updated_state['title']}")
-        print(f"🎯 Analysis focus: {incident_analysis.get('analysis_focus', '')}")
-        print(f"🔍 Investigation priority: {incident_analysis.get('investigation_priority', 'medium')}")
+        print(f"✅ STEP1: Incident fetched from Jira MCP: {updated_state['title']}")
+        print(f"🎯 STEP1: Analysis focus: {incident_analysis.get('analysis_focus', '')}")
+        print(f"🔍 STEP1: Investigation priority: {incident_analysis.get('investigation_priority', 'medium')}")
+        print(f"✅ STEP1: Function completed successfully")
+        print(f"✅ STEP1: Returning state with keys: {list(updated_state.keys())}")
+        print("=" * 80)
+        print("🚀 STEP1_Parse_IR_Ticket: Execution completed successfully")
+        print("=" * 80)
         
         return updated_state
         
     except Exception as e:
-        print(f"❌ Error fetching incident from Jira MCP: {e}")
+        print(f"❌ STEP1: Error fetching incident from Jira MCP: {e}")
+        print(f"❌ STEP1: Error type: {type(e)}")
+        import traceback
+        print(f"❌ STEP1: Full traceback:")
+        traceback.print_exc()
+        print("=" * 80)
+        print("🚀 STEP1_Parse_IR_Ticket: Execution failed with error")
+        print("=" * 80)
         # Fallback to basic incident details
-        return {
+        return_state = {
             **state,
             'title': f'Incident {incident_id}',
             'description': f'Error fetching incident details: {str(e)}',
@@ -510,6 +587,13 @@ async def step1_parse_ir_ticket(state: IncidentInput) -> IncidentState:
                 'content': f"Error fetching incident {incident_id} from Jira MCP: {str(e)}. Using fallback analysis."
             }]
         }
+        print(f"⚠️  STEP1: Using fallback state due to error")
+        print(f"⚠️  STEP1: Fallback state keys: {list(return_state.keys())}")
+        print("=" * 80)
+        print("🚀 STEP1_Parse_IR_Ticket: Execution completed with fallback")
+        print("=" * 80)
+        
+        return return_state
 
 
 async def step2_identify_first_repo(state: IncidentState) -> IncidentState:
@@ -540,7 +624,9 @@ async def step2_identify_first_repo(state: IncidentState) -> IncidentState:
         - Description: {description}
         - Error Message: {error_message}
         
-        Based on this incident, provide search guidance as JSON:
+        CRITICAL: You must respond with ONLY a valid JSON object. No markdown, no explanations, no additional text.
+        
+        Return this exact JSON structure:
         {{
             "search_keywords": ["keywords", "to", "search", "for", "in", "github"],
             "repo_patterns": ["repository", "naming", "patterns"],
@@ -549,6 +635,8 @@ async def step2_identify_first_repo(state: IncidentState) -> IncidentState:
             "main_repo_hint": "suggested main repository name",
             "reasoning": "explanation of search strategy"
         }}
+        
+        DO NOT include any markdown formatting, headers, or explanatory text. ONLY return the JSON object.
         """),
         ("human", """
         Example: If the incident is "Products page not loading", search for:
@@ -572,22 +660,134 @@ async def step2_identify_first_repo(state: IncidentState) -> IncidentState:
         # Call Circuit LLM to generate search strategy
         print("🔍 Using Circuit LLM to generate search strategy...")
         response = await llm.invoke(prompt_text)
+        print("🔍 LLM INVOKE COMPLETED")
+        
+        # Log the raw LLM response for debugging
+        print("=" * 80)
+        print("🔍 RAW LLM RESPONSE:")
+        print("=" * 80)
+        if response is None:
+            print("❌ LLM response is None!")
+        elif response == "":
+            print("❌ LLM response is empty string!")
+        else:
+            print(f"Response: {response}")
+        print("=" * 80)
+        print(f"🔍 Response type: {type(response)}")
+        print(f"🔍 Response length: {len(str(response)) if response else 0}")
+        print("=" * 80)
         
         # Parse JSON from response
         import re
-        json_match = re.search(r'\{.*\}', response, re.DOTALL)
-        if json_match:
-            search_strategy = json.loads(json_match.group())
-        else:
-            print("⚠️  Failed to parse LLM response, using fallback")
-            search_strategy = {
-                "search_keywords": ["products", "frontend", "ui", "web"],
-                "repo_patterns": ["*web*", "*frontend*", "*ui*"],
-                "file_patterns": ["*.js", "*.tsx", "*.vue"],
-                "code_locations": ["components", "pages", "services"],
-                "main_repo_hint": "productsWebApp",
-                "reasoning": "Fallback: Products page incident suggests frontend repository"
-            }
+        import json
+        
+        # Try multiple patterns to extract JSON
+        json_patterns = [
+            r'```json\s*(\{.*?\})\s*```',  # JSON in code blocks (most specific)
+            r'```\s*(\{.*?\})\s*```',  # JSON in generic code blocks
+            r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}',  # Nested JSON object
+            r'\{.*?\}',  # Simple JSON object (non-greedy)
+            r'\{.*\}',  # Basic JSON object (fallback)
+        ]
+        
+        # If no JSON found, try to extract information from markdown response
+        def extract_from_markdown(text):
+            """Extract search information from markdown response."""
+            try:
+                # Look for keywords in markdown
+                keywords_match = re.search(r'Keywords to Search.*?:\s*\n(.*?)(?:\n\n|\n\*\*|$)', text, re.DOTALL | re.IGNORECASE)
+                keywords = []
+                if keywords_match:
+                    keyword_lines = keywords_match.group(1).strip().split('\n')
+                    for line in keyword_lines:
+                        if ':' in line or '-' in line:
+                            # Extract quoted keywords
+                            quoted = re.findall(r'"([^"]+)"', line)
+                            keywords.extend(quoted)
+                        else:
+                            # Extract simple keywords
+                            words = re.findall(r'\b\w+\b', line)
+                            keywords.extend(words)
+                
+                # Look for repo patterns
+                repo_match = re.search(r'Repo Patterns.*?:\s*\n(.*?)(?:\n\n|\n\*\*|$)', text, re.DOTALL | re.IGNORECASE)
+                repo_patterns = []
+                if repo_match:
+                    pattern_lines = repo_match.group(1).strip().split('\n')
+                    for line in pattern_lines:
+                        quoted = re.findall(r'"([^"]+)"', line)
+                        repo_patterns.extend(quoted)
+                
+                # Look for file patterns
+                file_match = re.search(r'File Patterns.*?:\s*\n(.*?)(?:\n\n|\n\*\*|$)', text, re.DOTALL | re.IGNORECASE)
+                file_patterns = []
+                if file_match:
+                    pattern_lines = file_match.group(1).strip().split('\n')
+                    for line in pattern_lines:
+                        quoted = re.findall(r'"([^"]+)"', line)
+                        file_patterns.extend(quoted)
+                
+                if keywords or repo_patterns or file_patterns:
+                    return {
+                        "search_keywords": keywords[:5] if keywords else ["products", "frontend", "ui", "web"],
+                        "repo_patterns": repo_patterns if repo_patterns else ["*web*", "*frontend*", "*products*"],
+                        "file_patterns": file_patterns if file_patterns else ["*.js", "*.tsx", "*.vue"],
+                        "code_locations": ["components", "pages", "services"],
+                        "main_repo_hint": "productsWebApp",
+                        "reasoning": "Extracted from markdown response"
+                    }
+                return None
+            except Exception as e:
+                print(f"⚠️  Error extracting from markdown: {e}")
+                return None
+        
+        search_strategy = None
+        for i, pattern in enumerate(json_patterns):
+            print(f"🔍 Trying JSON pattern {i+1}: {pattern}")
+            json_match = re.search(pattern, response, re.DOTALL)
+            if json_match:
+                print(f"✅ Pattern {i+1} matched!")
+                try:
+                    json_str = json_match.group(1) if len(json_match.groups()) > 0 else json_match.group()
+                    print(f"🔍 Extracted JSON string: {json_str[:200]}...")
+                    search_strategy = json.loads(json_str)
+                    print("✅ Successfully parsed LLM response as JSON")
+                    print(f"✅ Parsed search strategy: {search_strategy}")
+                    break
+                except json.JSONDecodeError as e:
+                    print(f"⚠️  JSON decode error with pattern {pattern}: {e}")
+                    print(f"⚠️  Failed JSON string: {json_str[:200]}...")
+                    continue
+            else:
+                print(f"❌ Pattern {i+1} did not match")
+        
+        if not search_strategy:
+            # Try parsing the entire response as JSON (in case LLM returned clean JSON)
+            try:
+                print("🔍 Trying to parse entire response as JSON...")
+                search_strategy = json.loads(response.strip())
+                print("✅ Successfully parsed entire response as JSON")
+                print(f"✅ Parsed search strategy: {search_strategy}")
+            except json.JSONDecodeError as e:
+                print(f"⚠️  Failed to parse entire response as JSON: {e}")
+                
+                # Try to extract information from markdown response
+                print("🔍 Trying to extract information from markdown response...")
+                markdown_strategy = extract_from_markdown(response)
+                if markdown_strategy:
+                    print("✅ Successfully extracted search strategy from markdown")
+                    print(f"✅ Extracted search strategy: {markdown_strategy}")
+                    search_strategy = markdown_strategy
+                else:
+                    print("⚠️  Failed to extract from markdown, using fallback")
+                    search_strategy = {
+                        "search_keywords": ["web application", "product", "productsWebApp", "productsBackendService"],
+                        "repo_patterns": ["*web*", "*frontend*", "*products*"],
+                        "file_patterns": ["*.js", "*.tsx", "*.vue"],
+                        "code_locations": ["components", "pages", "services"],
+                        "main_repo_hint": "productsWebApp",
+                        "reasoning": "Fallback: Products page incident suggests frontend repository"
+                    }
         
         # Now use GitHub MCP to search for repositories
         print("🔍 Using GitHub MCP to search for repositories...")
@@ -1353,8 +1553,8 @@ def create_graph() -> StateGraph:
     workflow = StateGraph(IncidentInput)
     
     # Add nodes for each step
-    workflow.add_node("setup_mcp", setup_mcp_integrations)
     workflow.add_node("step1_parse_ticket", step1_parse_ir_ticket)
+    workflow.add_node("setup_mcp", setup_mcp_integrations)
     workflow.add_node("step2_identify_repo", step2_identify_first_repo)
     workflow.add_node("step3_discover_path", step3_discover_repo_path)
     workflow.add_node("step4_parallel_analysis", step4_parallel_analysis)
@@ -1366,9 +1566,9 @@ def create_graph() -> StateGraph:
     workflow.add_node("step9_update_ticket", step9_update_ir_ticket)
     
     # Define the linear workflow
-    workflow.add_edge(START, "setup_mcp")
-    workflow.add_edge("setup_mcp", "step1_parse_ticket")
-    workflow.add_edge("step1_parse_ticket", "step2_identify_repo")
+    workflow.add_edge(START, "step1_parse_ticket")
+    workflow.add_edge("step1_parse_ticket", "setup_mcp")
+    workflow.add_edge("setup_mcp",  "step2_identify_repo")
     workflow.add_edge("step2_identify_repo", "step3_discover_path")
     workflow.add_edge("step3_discover_path", "step4_parallel_analysis")
     workflow.add_edge("step4_parallel_analysis", "step5_analyze_logs")
